@@ -1,6 +1,11 @@
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 // Initialize OAuth2 Client
 const oAuth2Client = new google.auth.OAuth2(
