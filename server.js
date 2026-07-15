@@ -1,11 +1,9 @@
+require('dotenv').config();
+
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 
 const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
 
 // Initialize OAuth2 Client
 const oAuth2Client = new google.auth.OAuth2(
@@ -18,7 +16,6 @@ oAuth2Client.setCredentials({
     refresh_token: process.env.REFRESH_TOKEN
     
 });
-console.log('Refresh Token:', process.env.REFRESH_TOKEN);
 
 
 // Function to send email
@@ -65,7 +62,14 @@ const path = require('path');
 
 const app = express();
 app.use(express.json());
-const upload = multer({ dest: 'uploads/' });
+
+const uploadsDirectory = path.join(__dirname, 'uploads');
+const transcriptsDirectory = path.join(__dirname, 'transcripts');
+
+fs.mkdirSync(uploadsDirectory, { recursive: true });
+fs.mkdirSync(transcriptsDirectory, { recursive: true });
+
+const upload = multer({ dest: uploadsDirectory });
 
 // Serve static files
 app.use(express.static(path.join(__dirname)));
@@ -106,7 +110,7 @@ app.post('/upload-audio', upload.single('file'), (req, res) => {
 app.post('/save-all-answers', async (req, res) => {
     const answers = req.body.answers;
     const fileName = `session_${Date.now()}.txt`;
-    const outputPath = path.join(__dirname, 'transcripts', fileName);
+    const outputPath = path.join(transcriptsDirectory, fileName);
 
     let fileContent = '';
     for (const [question, answer] of Object.entries(answers)) {
@@ -129,10 +133,6 @@ app.post('/save-all-answers', async (req, res) => {
 
 
 
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
-});
-
 app.get('/test-email', async (req, res) => {
     try {
         await sendEmail('This is a test email from the server.');
@@ -143,4 +143,6 @@ app.get('/test-email', async (req, res) => {
     }
 });
 
-
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+});

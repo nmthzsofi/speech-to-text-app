@@ -3,18 +3,17 @@
   "version": "1.0.0",
   "description": "A simple speech-to-text app",
   "main": "server.js",
-  
   "scripts": {
     "start": "node server.js"
   },
-  
   "author": "Németh Zsófia",
   "license": "MIT",
-  
   "dependencies": {
-  "express": "^4.21.1",
-  "nodemailer": "^6.9.0",
-  "googleapis": "^105.0.0"
-}
-
+    "@google-cloud/speech": "^7.5.0",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.1",
+    "googleapis": "^173.0.0",
+    "multer": "^1.4.5-lts.2",
+    "nodemailer": "^9.0.3"
+  }
 }
